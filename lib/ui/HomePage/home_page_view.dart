@@ -62,106 +62,122 @@ class _HomePageView extends State<HomePageView> {
                 )
               ],
             ),
-            body: Column(
-              children: <Widget>[
-                SizedBox(width: 200.0),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        child: Container(
-                          width:400.0,
-                          child: TextFormField(
-                            maxLines: 2,
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide:BorderSide(color:Colors.blueAccent),
-                                  borderRadius: BorderRadius.all(Radius.circular(20))
+            body: Container(
+              decoration: BoxDecoration(
+                  gradient:LinearGradient(
+                      colors:[Colors.blue,Colors.lightBlue],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter
+                  )
+              ),
+
+              child: Column(
+                children: <Widget>[
+                  SizedBox(width: 200.0),
+                  Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            child: Container(
+                              width:400.0,
+                              child: TextFormField(
+                                maxLines: 2,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:BorderSide(color:Colors.blueAccent),
+                                      borderRadius: BorderRadius.all(Radius.circular(20))
+                                  ),
+                                  contentPadding:EdgeInsets.all(8.0),
+                                  hintText: 'submit new',
+                                  fillColor: Colors.lightBlue,
+                                  filled: true,
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    title = value;
+                                  });
+                                },
                               ),
-                              contentPadding:EdgeInsets.all(8.0),
-                              hintText: 'submit new',
-                              fillColor: Colors.lightBlue,
-                              filled: true,
                             ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                title = value;
-                              });
-                            },
                           ),
-                        ),
-                      ),
-                      Divider(height:10.0,),
-                      Container(
-                        width:400.0,
-                        child: TextFormField(
-                            maxLines: 3,
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide:BorderSide(color:Colors.blueAccent),
-                                  borderRadius: BorderRadius.all(Radius.circular(20))
-                              ),
+                          Divider(height:10.0,),
+                          Container(
+                            width:400.0,
+                            child: TextFormField(
+                                maxLines: 3,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:BorderSide(color:Colors.blueAccent),
+                                      borderRadius: BorderRadius.all(Radius.circular(20))
+                                  ),
 
-                              // contentPadding: ,
-                              border: InputBorder.none,
-                              contentPadding:EdgeInsets.all(20.0),
+                                  // contentPadding: ,
+                                  border: InputBorder.none,
+                                  contentPadding:EdgeInsets.all(20.0),
 
-                              hintText: 'Description new',
-                              fillColor: Colors.lightBlue,
-                              filled: true,
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                description = value;
-                              });
-                            }),
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    SizedBox(
-                      width:350,
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        onPressed: () {
-                          final post = Post(
-                              title: title,
-                              description: description,
-                              user: RandomUsers(),
-                              created: Timestamp.now());
-                          homePageBloc.add(AddPostCard(post));
-                          // HomePageBloc(context).add(AddPostCard(post));
-                        },
-                        child: Text('submit',
-                            style: TextStyle(color: Colors.white)),
-                        color: Colors.indigoAccent,
+                                  hintText: 'Description new',
+                                  fillColor: Colors.lightBlue,
+                                  filled: true,
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    description = value;
+                                  });
+                                }),
+                          )
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                Expanded(
-                  child: ListView(
-                    children: all,
                   ),
-                )
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        width:350,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              final post = Post(
+                                  title: title,
+                                  description: description,
+                                  user: RandomUsers(),
+                                  created: Timestamp.now());
+                              HomePageBloc(context).add(AddPostCard(post));
+                            } else {
+                              print('not validate');
+                            }
+                          },
+                          child: Text('submit',
+                              style: TextStyle(color: Colors.white)),
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: all,
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         });
